@@ -2,30 +2,28 @@ security:
     # https://symfony.com/doc/current/security/experimental_authenticators.html
     enable_authenticator_manager: true
     password_hashers:
-        App\Entity\User:
+        App\Entity\Utilisateur:
             algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        from_database:
             entity:
-                class: App\Entity\User
+                class: App\Entity\Utilisateur
                 property: username
+        
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: app_user_provider
+            form_login:
+                check_path: /login
 
-            form_login: 
-                login_path: security_login
-                check_path: security_login
-            
             logout:
-                path: security_logout
+                path: /logout
                 target: home
 
 
