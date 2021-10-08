@@ -26,4 +26,6 @@ services:
     App\Controller\HomeController:
         tags: ['controller.service_arguments']
     
-    
+    App\Listener\ImageCacheSubscriber:
+        tags:
+        - { name: doctrine.event_subscriber }

@@ -2,17 +2,26 @@
 
 namespace App\Entity;
 
-use App\Repository\PropertyRepository;
-use Doctrine\ORM\Mapping as ORM;
+use DateTime;
+use App\Entity\Option;
 use Cocur\Slugify\Slugify;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PropertyRepository;
+use Symfony\Component\HttpFoundation\File;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Vich\UploaderBundle\Entity\File as EntityFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  * @UniqueEntity("title")
+ * @vich\Uploadable()
  */
-class Property
+class Property 
 {
     const HEAT=[
         0 =>'Electrique',
@@ -24,6 +33,18 @@ class Property
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255)
+     */
+    private $filename;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="property_image", fileNameProperty="filename")
+     */
+    private $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -89,13 +110,17 @@ class Property
     /**
      * @ORM\Column(type="integer")
      */
-    private $heat;
+    private $heat;        
 
-    public function __construct()
-    {
-        $this->created_at = new \DateTime();
-    }
-        
+    /**
+     * @ORM\ManyToMany(targetEntity=Option::class, inversedBy="properties")
+     */
+    private $options;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updated_at;
 
     public function getId(): ?int
     {
@@ -267,4 +292,90 @@ class Property
     {
         return self::HEAT[$this->heat];
     }
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+        $this->options = new ArrayCollection();
+    }
+   
+    /**
+     * @return Collection|Option[]
+     */
+    public function getOptions(): Collection
+    {
+        return $this->options;
+    }
+
+    public function addOption(Option $option): self
+    {
+        if (!$this->options->contains($option)) {
+            $this->options[] = $option;
+            $option->addProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOption(Option $option): self
+    {
+        if ($this->options->removeElement($option)) {
+            $option->removeProperty($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param null|string $filename
+     * @return property
+     */
+    public function setFilename(?string $filename): Property
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+     * @return null|File
+     */
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * @param null|File $imageFile
+     * @return Property
+     */
+    public function setImageFile($imageFile): Property
+    {
+        $this->imageFile = $imageFile;
+        if($this->imageFile instanceof UploadedFile)
+        {
+            $this->updated_at = new \DateTime('now');
+        }
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTime $updated_at): self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }   
 }
