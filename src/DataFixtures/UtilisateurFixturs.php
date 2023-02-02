@@ -10,7 +10,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UtilisateurFixturs extends Fixture
 {
     private $passwordHasher;
-    
+
     public function __construct(UserPassWordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
@@ -18,8 +18,8 @@ class UtilisateurFixturs extends Fixture
     public function load(ObjectManager $manager)
     {
         $utilisateur = new Utilisateur();
-        $utilisateur->setUsername('test')
-            ->setPassword($this->passwordHasher->hashPassword($utilisateur,'test'));
+        $utilisateur->setUsername('admin')
+            ->setPassword($this->passwordHasher->hashPassword($utilisateur, 'admin'));
         $manager->persist($utilisateur);
 
         $manager->flush();

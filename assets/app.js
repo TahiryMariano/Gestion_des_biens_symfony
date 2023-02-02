@@ -16,14 +16,36 @@ import { Tooltip, Toast, Popover } from 'bootstrap';
 import './bootstrap';
 
 const $ = require('jquery');
+$('#contactButton').click(e => {
+    e.preventDefault()
+    $('#contactForm').slideDown()
+    $('#contactButton').slideUp()
+})
 // this "modifies" the jquery module: adding behavior to it
 // the bootstrap module doesn't export/return anything
 require('bootstrap');
 
 // or you can include specific pieces
-// require('bootstrap/js/dist/tooltip');
-// require('bootstrap/js/dist/popover');
-
-$(document).ready(function() {
+require('bootstrap/js/dist/tooltip');
+require('bootstrap/js/dist/popover');
+$(document).ready(function () {
     $('[data-toggle="popover"]').popover();
 });
+
+/*import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+    static targets = ["name", "output"]
+
+    greet() {
+        this.outputTarget.textContent =
+            `Hello, ${this.nameTarget.value}!`
+    }
+}
+import { startStimulusApp } from '@symfony/stimulus-bridge';
+
+export const app = startStimulusApp(require.context(
+    '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
+    true,
+    /\.(j|t)sx?$/
+));*/

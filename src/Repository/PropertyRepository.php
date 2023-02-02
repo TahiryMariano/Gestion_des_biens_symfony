@@ -22,6 +22,18 @@ class PropertyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Property::class);
     }
+
+    /**
+     * @return int|mixed|string
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countAllProperty()
+    {
+        $queryBuilder = $this->createQueryBuilder('a');
+        $queryBuilder->select('COUNT(a.id) as value');
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
     /**
      * @return Query
      */
@@ -29,45 +41,40 @@ class PropertyRepository extends ServiceEntityRepository
     {
         $query = $this->findVisibleQuery();
 
-        if($search->getMaxPrice())
-        {
-            $query= $query
+        if ($search->getMaxPrice()) {
+            $query = $query
                 ->andwhere('p.price <= :maxPrice')
                 ->setParameter('maxPrice', $search->getMaxPrice());
         }
 
-        if($search->getOptions()->count() > 0)
-        {
-            $k=0;
-            foreach($search->getOptions() as $option)
-            {
+        if ($search->getOptions()->count() > 0) {
+            $k = 0;
+            foreach ($search->getOptions() as $option) {
                 $k++;
                 $query = $query
-                ->andWhere(":option$k MEMBER OF p.options")
-                ->setParameter("option$k", $option);
+                    ->andWhere(":option$k MEMBER OF p.options")
+                    ->setParameter("option$k", $option);
             }
         }
 
-        if($search->getMinSurface())
-        {
-            $query= $query
+        if ($search->getMinSurface()) {
+            $query = $query
                 ->andwhere('p.surface >= :minSurface')
                 ->setParameter('minSurface', $search->getMinSurface());
         }
-        return $query ->getQuery();
+        return $query->getQuery();
     }
     /**
      * @return Property[]
      */
-    public function findLatest():array
+    public function findLatest(): array
     {
         return $this->findVisibleQuery()
             ->setMaxResults(4)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    private function findVisibleQuery():QueryBuilder
+    private function findVisibleQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('p')
             ->Where('p.sold = false');

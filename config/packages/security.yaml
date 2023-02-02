@@ -19,12 +19,17 @@ security:
             security: false
         main:
             lazy: true
+            provider: from-database
             form_login:
                 check_path: /login
 
             logout:
                 path: /logout
                 target: home
+            custom_authenticator: App\Security\LoginFormAuthenticator
+
+            # configure the form authentication as the entry point for unauthenticated users
+            entry_point: form_login
 
 
             # activate different ways to authenticate
@@ -37,4 +42,4 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        #- { path: ^/biens, roles: [ROLE_FRONTOFFICE,ROLE_ADMIN] }

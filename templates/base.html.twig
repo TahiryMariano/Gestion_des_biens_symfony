@@ -1,44 +1,143 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" >
-        <title>{% block title %}Agency{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('build/app.88073919.css')}}">
-        {% endblock %}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1.0" name="viewport">
+		<meta content="" name="description">
+		<meta content="" name="keywords">
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary  shadow-lg">
-            <div class="container-fluid">
-                <a class="navbar-brand " href="{{ path('home') }}">
-                    <img src="{{ asset('logo/logo.png') }}" class="logo me-auto" alt="logo" style="width:50px;">
-                </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link {% if current_menu is defined and current_menu=='properties' %}active{% endif %}" aria-current="page" href="{{ path('Property.index') }}">Acheter</a>
-                        </li>
-                    </ul>   
-                    {% if  app.user %}
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                             <a class="nav-link active" href="{{ path('security_logout')}}">Se déconnecter</a> 
-                        </li>
-                    </ul>
-                    {% endif %}
-                </div>
-            </div>
-        </nav> 
-        {% block body %}{% endblock %}
-    </body>
-</html>
+		<title>
+			{% block title %}Agence immobilière
+			{% endblock %}
+		</title>
+
+
+		<!-- Favicons -->
+		<link
+		rel="icon" type="image/x-icon" href="{{ asset('logo/logo.png') }}"/>
+
+
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+			<!-- Template Main CSS File -->
+			<link
+			href="{{ asset('templates/assets/css/style.css')}}" rel="stylesheet">
+
+			<!-- Vendor CSS Files -->
+			<link href="{{ asset('templates/assets/vendor/aos/aos.css') }}" rel="stylesheet">
+			<link href="{{ asset('templates/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+			<link href="{{ asset('templates/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+			<link href="{{ asset('templates/assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+			<link href="{{ asset('templates/assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+			<link href="{{ asset('templates/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+
+		{% endblock %}
+	</head>
+
+	<body>
+
+		<!-- ======= Header ======= -->
+		<header id="header" class="d-flex align-items-center">
+			<div class="container d-flex align-items-center justify-content-between">
+				<a href="{{ path('home') }}" class="navbar-brand">
+					<img src="{{asset('logo/TahiryM2.png') }}" class="logo me-auto" style="margin-bottom: 0.5em;" alt="logo">
+				</a>
+				<nav id="navbar" class="navbar ">
+					<ul>
+						<li><a class="nav-link scrollto fw-bolder"href="{{ path('home') }}">Accueil</a></li>
+						<li><a class="nav-link scrollto {% if current_menu is defined and current_menu=='properties' %}active{% endif %} fw-bolder" aria-current="page"href="{{ path('Property.index') }}">Acheter</a></li>
+					</ul>
+				</nav>
+				<i class="bi bi-list mobile-nav-toggle"></i>
+				<!-- .navbar -->
+			</div>
+		</header>
+		<!-- End Header -->
+		{% block body %}{% endblock %}
+		<!-- ======= Footer ======= -->
+		<footer id="footer">
+			<div class="footer-top">
+				<div class="container">
+					<div class="row">
+
+						<div class="col-lg-3 col-md-6 footer-contact">
+							<h3>TahiryM<span>.</span>
+							</h3>
+							<p>
+								67ha Sud
+								<br>
+								Tananarive, 101<br>
+								Madagascar
+							</p>
+						</div>
+
+						<div class="col-lg-3 col-md-6 footer-links">
+							<h4>Liens utils</h4>
+							<ul>
+								<li>
+									<i class="bx bx-chevron-right"></i>
+									<a href="{{ path('home')}}">Accueil</a>
+								</li>
+							</ul>
+						</div>
+
+
+						<div class="col-lg-3 col-md-6 footer-links">
+							<h4>Réseaux sociaux</h4>
+							<div class="social-links mt-3">
+								<a href="#" class="twitter">
+									<i class="bx bxl-twitter"></i>
+								</a>
+								<a href="#" class="facebook">
+									<i class="bx bxl-facebook"></i>
+								</a>
+								<a href="#" class="instagram">
+									<i class="bx bxl-instagram"></i>
+								</a>
+								<a href="#" class="google-plus">
+									<i class="bx bxl-skype"></i>
+								</a>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="container py-4 ">
+				<div class="copyright">
+					&copy; Copyright
+					<strong>
+						<span>TahiryM</span>
+					</strong>. Tous droits réservés
+				</div>
+			</div>
+		</footer>
+
+		<!-- End Footer -->
+		<div id="preloader"></div>
+		<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+			<i class="bi bi-arrow-up-short"></i>
+		</a>
+
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+
+			<!-- Vendor JS Files -->
+			<script src="{{ asset('templates/assets/vendor/aos/aos.js') }}"></script>
+			<script src="{{ asset('templates/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+			<script src="{{asset('templates/assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
+			<script src="{{ asset('templates/assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
+			<script src="{{ asset('templates/assets/vendor/php-email-form/validate.js')}}"></script>
+			<script src="{{ asset('templates/assets/vendor/purecounter/purecounter.js')}}"></script>
+			<script src="{{ asset('templates/assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+			<script src="{{ asset('templates/assets/vendor/waypoints/noframework.waypoints.js')}}"></script>
+
+			<!-- Template Main JS File -->
+			<script src="{{ asset('templates/assets/js/main.js')}}"></script>
+		{% endblock %}
+	</body>
+</html></body></html>

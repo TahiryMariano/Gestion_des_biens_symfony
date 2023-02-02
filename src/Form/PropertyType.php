@@ -9,7 +9,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PropertyType extends AbstractType
@@ -28,19 +27,18 @@ class PropertyType extends AbstractType
             ->add('bedroom')
             ->add('city')
             ->add('room')
-            ->add('heat', ChoiceType::class,[
-                'choices'=> $this->getChoices()
+            ->add('heat', ChoiceType::class, [
+                'choices' => $this->getChoices()
             ])
-            ->add('options',EntityType::class,[
+            ->add('options', EntityType::class, [
                 'required' => false,
                 'class' => Option::class,
-                'choice_label' =>'name',
+                'choice_label' => 'name',
                 'multiple' => true
             ])
             ->add('imageFile', FileType::class, [
                 'required' => false
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -53,9 +51,8 @@ class PropertyType extends AbstractType
     private function getChoices()
     {
         $choices = Property::HEAT;
-        $output =[];
-        foreach($choices as $k=> $v)
-        {
+        $output = [];
+        foreach ($choices as $k => $v) {
             $output[$v] = $k;
         }
         return $output;

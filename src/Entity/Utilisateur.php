@@ -5,10 +5,15 @@ namespace App\Entity;
 use Serializable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UtilisateurRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
+ * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
  */
 class Utilisateur implements UserInterface, \Serializable
 {
@@ -20,12 +25,14 @@ class Utilisateur implements UserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -58,8 +65,13 @@ class Utilisateur implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
+        /*$userRoles = $this->getRole();
+        foreach ($userRoles as $userRole) {
+            $roles[] = $userRole->getRoleName();
+        }
+        return array_unique($roles).*/
         return ['ROLE_ADMIN'];
     }
 
@@ -70,12 +82,11 @@ class Utilisateur implements UserInterface, \Serializable
 
     public function eraseCredentials()
     {
-
     }
 
     public function getUserIdentifier()
     {
-            return (string) $this->username;
+        return (string) $this->username;
     }
     /**
      * @return string
@@ -99,6 +110,6 @@ class Utilisateur implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password
-        ) = unserialize($serialized, ['allowed_classes'=> false]);
+        ) = unserialize($serialized, ['allowed_classes' => false]);
     }
 }

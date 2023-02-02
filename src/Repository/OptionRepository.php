@@ -19,6 +19,16 @@ class OptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Option::class);
     }
 
+    /**
+     * @return int|mixed|string
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countAllOption()
+    {
+        $queryBuilder = $this->createQueryBuilder('a');
+        $queryBuilder->select('COUNT(a.id) as value');
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
     // /**
     //  * @return Option[] Returns an array of Option objects
     //  */

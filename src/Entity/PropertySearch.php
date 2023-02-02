@@ -6,9 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-class PropertySearch{
+class PropertySearch
+{
     /**
      * @var int|null
+     * @Assert\Range(min=1)
      */
     private $maxPrice;
 
@@ -68,7 +70,7 @@ class PropertySearch{
      * Get the value of options
      * return ArrayCollection
      */
-    public function getOptions():ArrayCollection
+    public function getOptions(): ArrayCollection
     {
         return $this->options;
     }

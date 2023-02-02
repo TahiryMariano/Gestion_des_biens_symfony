@@ -1,0 +1,4 @@
+# app/config/config.yml
+fos_ck_editor:
+    jquery: true
+    jquery_path: your/own/jquery.js

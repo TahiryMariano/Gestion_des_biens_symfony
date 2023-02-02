@@ -1,28 +1,39 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <div class="jumbotron text-center mt-50" style="background-color:rgba(225, 7, 7, 0.86); width:50%; color:white; margin:auto; margin-top:1em; border-radius:10px; ">
-        <h1>GESTION DES BIENS IMMOBILIERS</h1>
-    </div>
+	<!-- ======= Hero Section ======= -->
+	<section id="hero" class="d-flex align-items-center">
+		<div class="container" data-aos="zoom-out" data-aos-delay="100">
+			<div style="margin-top:2em;margin-left:350px;">
+				<h1>Agence
+					<span>TahiryM.</span>
+				</h1>
+				<h2>une agence immobilière</h2>
+			</div>
+			<div class="row flex" style="margin-top:3em;">
+				<h2 class=" fw-bolder">Les derniers biens</h2>
+				{% for property in properties %}
+					<div class="col-3">
+						<div class="card">
+							{% if property.filename %}
+								<img src="{{ vich_uploader_asset(property,'imageFile') | imagine_filter('thumb') }}" alt="card-img-top">
+							{% else %}
+								<img src="{{ '/images/properties/blog-recent-posts-4.jpg' | imagine_filter('thumb') }}" alt="card-img-top">
+							{% endif %}
+							<div class="card-body">
+								<h5 class="card-title fw-bolder">
+									<a href="{{ path('property.show', {id: property.id, slug: property.slug }) }}">{{ property.title }}</a>
+								</h5>
+								<p class="card-text">{{ property.city }}
+									({{ property.codepostal }})</p>
+								<div class="text-primary" style="font-weight:bold; font: size 2rem;">{{ property.price |number_format(0, '', ' ') }}$</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+	<!-- End Hero -->
 
-    <div class="container">
-        <h2>Les derniers biens</h2>
-        <div class="row flex">
-        {% for property in properties %}
-            <div class="col-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{{ path('property.show', {id: property.id, slug: property.slug }) }}">{{ property.title }}</a>
-                        </h5>
-                        <p class="card-text">{{ property.city }} ({{ property.codepostal }})</p>
-                        <div class="text-primary" style="font-weight:bold; font: size 2rem;" >{{ property.price |number_format(0, '', ' ') }}$</div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-    </div>
 {% endblock %}
-
-    

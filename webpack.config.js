@@ -1,12 +1,14 @@
-import { isRuntimeEnvironmentConfigured, configureRuntimeEnvironment, setOutputPath, isProduction, getWebpackConfig } from '@symfony/webpack-encore';
+const Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
-if (!isRuntimeEnvironmentConfigured()) {
-    configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
+if (!Encore.isRuntimeEnvironmentConfigured()) {
+    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
 
-setOutputPath('public/build/')
+Encore
+    // directory where compiled assets will be stored
+    .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/build')
     // only needed for CDN's or sub-directory deploy
@@ -15,13 +17,24 @@ setOutputPath('public/build/')
     /*
      * ENTRY CONFIG
      *
+     * Add 1 entry for each "page" of your app
+     * (including one that's included on every page - e.g. "app")
+     *
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
 
-    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
-    .enableStimulusBridge('./assets/controllers.json')
+// enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
+//.enableStimulusBridge('./assets/controllers.json')
+
+/*
+    debug for the "your controller.json was not found.Be sure to add alias from @symfony/stimulus-bridge/controller.json"
+*/
+const path = require('path');
+Encore.addAliases({
+    '@symfony': path.resolve(__dirname, './node_modules/@symfony/stimulus-bridge/controllers.json')
+})
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -39,19 +52,18 @@ setOutputPath('public/build/')
      */
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
-    .enableSourceMaps(!isProduction())
+    .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
-    .enableVersioning(isProduction())
-
-    .configureBabel((config) => {
-        config.plugins.push('@babel/plugin-proposal-class-properties');
-    })
+    .enableVersioning(Encore.isProduction())
 
     // enables @babel/preset-env polyfills
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
         config.corejs = 3;
     })
+    /*.configureBabel(function (babelConfig) {
+        babelConfig.presets.push('es2017');
+    })*/
 
     // enables Sass/SCSS support
     .enableSassLoader()
@@ -59,15 +71,21 @@ setOutputPath('public/build/')
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 
-    // uncomment if you use React
-    //.enableReactPreset()
-
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
-    .enableIntegrityHashes(isProduction())
+    //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
-;
+    .autoProvidejQuery()
 
-export default getWebpackConfig();
+    // uncomment if you use API Platform Admin (composer require api-admin)
+    //.enableReactPreset()
+    //.addEntry('admin', './assets/admin.js')
+    ;
+
+config = Encore.getWebpackConfig();
+config.externals.jquery = 'jQuery';
+module.exports = config;
+
+// this loads jquery, but does *not* set a global $ or jQuery variable
+const $ = require('jquery');

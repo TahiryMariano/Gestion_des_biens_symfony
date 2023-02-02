@@ -1,0 +1,19 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{% extends '@!EasyAdmin/page/content.html.twig' %}
+
+{% block content_title 'Administration' %}
+
+{% block main %}
+	<div class="container">
+		<div class="row">
+			<div class="col-6 alert-info">
+				<span class="display-2">{{ countAllProperty['value'] }}</span>
+				<span class="fw-bolder">propriétés</span>
+			</div>
+			<div class="col-6 alert-danger">
+				<span class="display-2">{{ countAllOption['value'] }}</span>
+				<span class="fw-bolder">options</span>
+			</div>
+		</div>
+	</div>
+{% endblock %}
